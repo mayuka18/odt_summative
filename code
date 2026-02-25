@@ -1,0 +1,100 @@
+from machine import Pin , TouchPad, PWM
+import neopixel
+import time
+
+neo = neopixel.NeoPixel(Pin(12, Pin.OUT), 16)
+buzz = PWM(Pin(23))
+buzz.duty(0)
+pb = Pin(32, Pin.IN, Pin.PULL_UP)
+sm = PWM(Pin(25), freq=50)
+sm2 = PWM(Pin(5), freq=50)
+tp = TouchPad(Pin(4))
+tp2 = TouchPad(Pin(13))
+ir = Pin(22, Pin.IN, Pin.PULL_UP)
+freq = [400, 800, 1200, 2000]
+a = freq[0]
+b = freq[1]
+c = freq[2]
+d = freq[3]
+count = 0
+
+while True :
+    
+    pbv = pb.value()
+    
+    if pbv == 0 :
+        
+        buzz.freq(a)
+        buzz.duty(768)
+        time.sleep(0.6)
+        buzz.duty(0)
+        time.sleep(0.15)
+
+        buzz.freq(b)
+        buzz.duty(768)
+        time.sleep(0.6)
+        buzz.duty(0)
+        time.sleep(0.15)
+
+        buzz.freq(c)
+        buzz.duty(768)
+        time.sleep(0.6)
+        buzz.duty(0)
+        time.sleep(0.15)
+
+        buzz.freq(d)
+        buzz.duty(768)
+        time.sleep(0.3)
+        buzz.duty(0)
+        time.sleep(1)
+        
+    tpv = tp.read()
+    tp2v = tp2.read()
+    irv = ir.value()
+    
+   
+    if tpv < 200 :
+        count = count + 1
+        
+        print(count)
+        for i in range(120,22,60) :
+            sm.duty(i)
+            print(i)
+            time.sleep(0.15)
+            
+        for x in range(22,120,60) :
+            sm.duty(x)
+            print(x)
+            time.sleep(0.15)
+        time.sleep(1)
+        
+    if tp2v < 200 :
+        count = count + 1
+        
+        print(count)
+        
+        for r in range(120,22,60) :
+            sm2.duty(r)
+            print(r)
+            time.sleep(0.15)
+            
+        for y in range(22,120,60) :
+            sm2.duty(y)
+            print(y)
+            time.sleep(0.15)
+        time.sleep(1)
+        
+        
+    if irv == 0 :
+        print("goal scored")            
+        for n in range(0, 16, 1) :
+            print(n)
+            neo[n] = (0, 0, 255)
+            neo.write()
+            time.sleep(0.1)
+    else :
+        for y in range(16) :
+            neo[y] = (0,0,0)
+            neo.write()    
+        
+        
